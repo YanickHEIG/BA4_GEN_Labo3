@@ -1,19 +1,36 @@
 package ch.heig.dgyt.lecteursredacteurs;
 
+
 public class Lecteur {
+    private Thread thread;
+    private Controleur controleur;
+    public Boolean reading = false;
     Lecteur(Controleur controleur) {
-
+        Lecteur lecteur = this;
+        this.controleur = controleur;
+        thread = new Thread() {
+            @Override
+            public void run() {
+                while (!controleur.read(lecteur)) ;
+                reading = true;
+                while(controleur.isAccessing(lecteur));
+                reading = false;
+            }
+        };
     }
 
-    public void startRead() {
-
+    public synchronized void startRead() {
+        reading = false;
+        thread.start();
+        while(reading == false && thread.getState() == Thread.State.RUNNABLE);
     }
 
-    public void stopRead() {
-
+    public synchronized void stopRead() {
+        this.controleur.close(this);
+        while(reading);
     }
 
-    public boolean isWaiting() {
-        return false;
+    public synchronized boolean isWaiting() {
+        return reading == false;
     }
 }
