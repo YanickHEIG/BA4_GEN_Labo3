@@ -12,13 +12,13 @@ public class Redacteur extends Thread {
     @Override
     public void run() {
         synchronized (controleur) {
-            System.out.println("Is being written: " + controleur.isBeingWritten());
-            System.out.println("Is being read: " + controleur.isBeingRead());
-            while (controleur.isBeingWritten() || controleur.isBeingRead()) {
+
+            System.out.println("Is being put to wait: " + (controleur.isBeingRead() || controleur.isBeingWritten()));
+            while ( controleur.isBeingWritten()) {
                 try {
                     controleur.wait();
                     this.setPriority(Thread.MAX_PRIORITY);
-                    //System.out.println("Redactor thread : " + this.getName() + " is set to wait : " + "\n");
+                    System.out.println("Redactor thread : " + this.getName() + " is set to wait : " +  this.getState());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -37,6 +37,6 @@ public class Redacteur extends Thread {
     }
 
     public boolean isWaiting() {
-        return this.getState() == Thread.State.WAITING;
+        return this.getState() == State.WAITING;
     }
 }

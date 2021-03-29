@@ -8,48 +8,45 @@ public class Controleur {
     private Set<Lecteur> lecteurs = new HashSet<>();
     private Redacteur redacteur;
 
-    boolean isBeingRead() {
-        return this.lecteurs.size() > 0;
-    }
-
-    boolean isBeingWritten() {
-        return this.redacteur != null;
-
-    }
-
-    synchronized boolean read(Lecteur lecteur) {
+    synchronized boolean isBeingRead() {
         synchronized (this) {
-            if (lecteur == null || redacteur != null)
-                return false;
-            lecteurs.add(lecteur);
-            return true;
+            return this.lecteurs.size() > 0;
         }
     }
 
-    synchronized boolean write(Redacteur redacteur) {
+    synchronized boolean isBeingWritten() {
         synchronized (this) {
-            if (this.redacteur != null || redacteur == null)
-                return false;
-            this.redacteur = redacteur;
-            return lecteurs.isEmpty();
+            return this.redacteur != null;
         }
+
+    }
+
+    void read(Lecteur lecteur) {
+        synchronized (this) {
+            if (lecteur != null)
+                lecteurs.add(lecteur);
+        }
+    }
+
+    void write(Redacteur redacteur) {
+        synchronized (this) {
+            if (this.redacteur == null || redacteur != null)
+                this.redacteur = redacteur;
+        }
+
     }
 
     void close(Lecteur lecteur) {
-        synchronized (this) {
-            if (lecteurs.remove(lecteur) && lecteurs.size() == 0) {
-                this.redacteur = null;
-                this.notifyAll();
-            }
+        if (lecteurs.remove(lecteur) && lecteurs.size() == 0) {
+            this.redacteur = null;
+            this.notifyAll();
         }
     }
 
     void close(Redacteur redacteur) {
-        synchronized (this) {
-            if (this.redacteur != null && this.redacteur == redacteur) {
-                this.redacteur = null;
-                this.notifyAll();
-            }
+        if (this.redacteur != null && this.redacteur == redacteur) {
+            this.redacteur = null;
+            this.notifyAll();
         }
     }
 

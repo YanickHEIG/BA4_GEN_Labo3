@@ -14,15 +14,15 @@ public class Lecteur extends Thread {
         synchronized (controleur) {
             while (controleur.isBeingWritten()) {
                 try {
-                    this.setPriority(Thread.MIN_PRIORITY);
                     controleur.wait();
+                    this.setPriority(Thread.MIN_PRIORITY);
                     System.out.print("Reader thread : " + this.getName() + " is set to wait " + this.getState() + "\n");
 
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
-            //System.out.print("New reader thread: " + this.getName() + " " + this.getState() + "\n");
+            System.out.print("New reader thread: " + this.getName() + " " + this.getState() + "\n");
             this.controleur.read(this);
         }
     }
@@ -37,6 +37,6 @@ public class Lecteur extends Thread {
     }
 
     public boolean isWaiting() {
-        return this.getState() == Thread.State.WAITING;
+        return this.getState() == State.WAITING;
     }
 }
