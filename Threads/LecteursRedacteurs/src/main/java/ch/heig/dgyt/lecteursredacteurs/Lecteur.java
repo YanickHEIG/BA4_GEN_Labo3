@@ -15,12 +15,10 @@ public class Lecteur extends Thread {
             while (controleur.isBeingWritten()) {
                 try {
                     this.setPriority(Thread.MIN_PRIORITY);
-                    synchronized (this) {
-                        this.wait();
-                    }
+                    controleur.wait();
                     System.out.print("Reader thread : " + this.getName() + " is set to wait " + this.getState() + "\n");
 
-                } catch (InterruptedException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }

@@ -16,13 +16,10 @@ public class Redacteur extends Thread {
             System.out.println("Is being read: " + controleur.isBeingRead());
             while (controleur.isBeingWritten() || controleur.isBeingRead()) {
                 try {
-                    System.out.println("Trying to wait..");
-                    synchronized (this) {
-                        this.wait();
-                    }
+                    controleur.wait();
                     this.setPriority(Thread.MAX_PRIORITY);
-                    System.out.println("Redactor thread : " + this.getName() + " is set to wait : " + "\n");
-                } catch (InterruptedException e) {
+                    //System.out.println("Redactor thread : " + this.getName() + " is set to wait : " + "\n");
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
