@@ -40,6 +40,7 @@ public class LecteursRedacteursTest {
 
         // lecteurs 1 et 2 passent
         // puis redacteur1 attends et donc lecteur3 aussi
+        System.out.print(lecteur1.getState() + "  " + lecteur2.getState() + "  " + redacteur1.getState() + "  " + lecteur3.getState() + "\n");
         assertTrue(redacteur1.isWaiting());
         assertTrue(lecteur3.isWaiting());
         assertFalse(lecteur1.isWaiting());

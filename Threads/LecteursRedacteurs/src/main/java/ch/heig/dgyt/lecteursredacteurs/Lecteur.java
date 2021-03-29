@@ -1,38 +1,44 @@
 package ch.heig.dgyt.lecteursredacteurs;
 
-public class Lecteur {
-    private Thread thread;
+public class Lecteur extends Thread {
+    //private Thread thread;
     private Controleur controleur;
+
     Lecteur(Controleur controleur) {
         Lecteur lecteur = this;
         this.controleur = controleur;
-        thread = new Thread() {
-            @Override
-            public synchronized void run() {
-                synchronized (controleur) {
-                    while (!controleur.read(lecteur)) {
-                        try {
-                            controleur.wait();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
+    }
+
+    @Override
+    public void run() {
+        synchronized (controleur) {
+            while (controleur.isBeingWritten()) {
+                try {
+                    this.setPriority(Thread.MIN_PRIORITY);
+                    synchronized (this) {
+                        this.wait();
                     }
+                    System.out.print("Reader thread : " + this.getName() + " is set to wait " + this.getState() + "\n");
+
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
-                while(controleur.isAccessing(lecteur));
             }
-        };
-        thread.setPriority(Thread.MIN_PRIORITY);
+            //System.out.print("New reader thread: " + this.getName() + " " + this.getState() + "\n");
+            this.controleur.read(this);
+        }
     }
 
-    public synchronized void startRead() {
-        thread.start();
+
+    public void startRead() {
+        this.start();
     }
 
-    public synchronized void stopRead() {
+    public void stopRead() {
         this.controleur.close(this);
     }
 
-    public synchronized boolean isWaiting() {
-        return thread.getState() == Thread.State.WAITING;
+    public boolean isWaiting() {
+        return this.getState() == Thread.State.WAITING;
     }
 }
