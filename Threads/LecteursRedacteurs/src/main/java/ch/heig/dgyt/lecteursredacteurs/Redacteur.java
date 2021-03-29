@@ -29,5 +29,6 @@ public class Redacteur extends Thread {
 
     public synchronized boolean isWaiting() {
         return writing == false;
+
     }
 }

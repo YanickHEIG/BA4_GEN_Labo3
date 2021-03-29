@@ -10,6 +10,7 @@
 
 
 
+<<<<<<< HEAD
 ## Issues
 
 Les asserts sont faits de manières synchrone, mais les threads ne sont pas forcement arrivé au point nécessaire:
@@ -52,3 +53,12 @@ Solution: Garder le compte des lecteurs et rédacteurs en attente.
 * Si des lecteurs sont en attente, on les débloque
 
 Si un des 2 a été débloqué, on attend que la main ait été reprise sur le controlleur
+=======
+
+
+
+
+## Todo
+
+* Run tests for lecteursredacteurs from travis CI
+>>>>>>> 2c2f14090e0071be732f1e836eba4a5bf0ad8abd

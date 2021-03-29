@@ -1,6 +1,5 @@
 package ch.heig.dgyt.lecteursredacteurs;
 
-
 public class Lecteur extends Thread {
     private Controleur controleur;
     public Boolean reading = false;
