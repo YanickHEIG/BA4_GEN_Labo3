@@ -47,6 +47,11 @@ public class Controleur {
                 this.redacteur = redacteur;
         }
 
+        synchronized (waitingRedacteurCount) {
+            waitingRedacteurCount -= 1;
+        }
+        return true;
+    }
 
     synchronized boolean isAccessing(Lecteur lecteur) {
         return lecteurs.contains(lecteur);
